@@ -48,6 +48,7 @@ a { color: var(--violet-text); }
 .container { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 var(--space-6); }
 
 /* type */
+.display, .h1 { text-wrap: balance; }
 .display { font-size: 64px; line-height: 68px; font-weight: 700; letter-spacing: -0.03em; margin: 0; }
 .h1 { font-size: 40px; line-height: 46px; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
 .h3 { font-size: 20px; line-height: 28px; font-weight: 600; margin: 0; }
