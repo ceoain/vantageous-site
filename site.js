@@ -6,107 +6,59 @@
   /* ---------- nav: light bar once the dark hero has scrolled away ---------- */
   const nav = $('[data-nav]');
   const hero = $('[data-hero]');
+  const darkZones = [hero, $('[data-svc-zoom]')].filter(Boolean);
   const setNav = () => {
     if (!nav) return;
-    const light = !hero || hero.getBoundingClientRect().bottom <= nav.offsetHeight;
+    const h = nav.offsetHeight;
+    const light = !darkZones.some(z => { const r = z.getBoundingClientRect(); return r.top <= h && r.bottom > h; });
     nav.classList.toggle('is-light', light);
   };
 
-  /* ---------- hero: frames of the marble run, scrubbed by scroll ---------- */
-  const FRAMES = 177;              // 0–22 s of the film at 8 frames a second
-  const FILM_END = 0.9;            // the last 10% of the scroll holds the final frame
-  const canvas = $('[data-hero-canvas]');
+  /* ---------- hero: the marble run plays once on arrival, then holds on the chart ---------- */
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const saveData = navigator.connection && navigator.connection.saveData;
-  const beats = $$('[data-beat]').map(el => ({ el, range: el.dataset.beat.split(',').map(Number) }));
-  const hint = $('[data-scroll-hint]');
-  let scrollMode = !!(hero && canvas && canvas.getContext && !reduce.matches && !saveData);
+  const video = $('[data-hero-video]');
+  const replay = $('[data-replay]');
+  const portrait = matchMedia('(max-aspect-ratio: 1/1)');
 
-  if (hero && !scrollMode) hero.classList.add('is-static');
-
-  if (scrollMode) {
-    document.documentElement.classList.add('js-scroll');
-    const ctx = canvas.getContext('2d');
-    const imgs = new Array(FRAMES);
-    const loaded = new Uint8Array(FRAMES);
-    let set = '', current = -1, want = 0, raf = 0;
-
-    const pickSet = () => (innerWidth / innerHeight < 1 ? '916' : '169');
-    const src = i => `/assets/hero/${set}/f${String(i).padStart(3, '0')}.webp`;
-
-    const order = () => {   // coarse to fine, so the whole run is scrubbable early
-      const seen = new Set(), out = [];
-      for (const step of [16, 8, 4, 2, 1]) for (let i = 0; i < FRAMES; i += step) if (!seen.has(i)) { seen.add(i); out.push(i); }
-      if (!seen.has(FRAMES - 1)) out.push(FRAMES - 1);
-      return out;
-    };
-
-    const load = () => {
-      set = pickSet();
-      loaded.fill(0);
-      const queue = order();
-      let active = 0;
-      const next = () => {
-        while (active < 6 && queue.length) {
-          const i = queue.shift(), img = new Image(), mySet = set;
-          active++;
-          img.decoding = 'async';
-          img.onload = () => { active--; if (mySet !== set) return; imgs[i] = img; loaded[i] = 1; if (Math.abs(i - want) < 12) schedule(); next(); };
-          img.onerror = () => { active--; next(); };
-          img.src = src(i);
-        }
-      };
-      next();
-    };
-
-    const nearest = i => {
-      for (let d = 0; d < FRAMES; d++) {
-        if (i - d >= 0 && loaded[i - d]) return i - d;
-        if (i + d < FRAMES && loaded[i + d]) return i + d;
+  if (hero && video) {
+    // poster follows the orientation so the first frame matches the clip
+    video.poster = portrait.matches ? '/assets/hero/hero-first-916.jpg' : '/assets/hero/hero-first-169.jpg';
+    if (reduce.matches || saveData) {
+      hero.classList.add('is-static');
+      video.removeAttribute('preload');
+    } else {
+      const start = () => video.play().catch(() => { hero.classList.add('is-static'); });
+      video.addEventListener('ended', () => { if (replay) replay.hidden = false; });
+      replay?.addEventListener('click', () => { replay.hidden = true; video.currentTime = 0; start(); });
+      // pause off-screen, resume when back (only if it hasn't finished)
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => { if (!e.isIntersecting) video.pause(); else if (!video.ended && video.currentTime > 0) video.play().catch(() => {}); }).observe(hero);
       }
-      return -1;
-    };
+      start();
+    }
+  }
 
-    const size = () => {
-      const dpr = Math.min(devicePixelRatio || 1, 2);
-      canvas.width = Math.round(canvas.clientWidth * dpr);
-      canvas.height = Math.round(canvas.clientHeight * dpr);
-      current = -1;
-    };
-
-    const draw = () => {
-      raf = 0;
-      const i = nearest(want);
-      if (i < 0 || i === current) return;
-      const img = imgs[i], cw = canvas.width, ch = canvas.height;
-      const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);   // cover
-      const w = img.naturalWidth * s, h = img.naturalHeight * s;
-      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
-      current = i;
-    };
-    const schedule = () => { if (!raf) raf = requestAnimationFrame(draw); };
-
-    const progress = () => {
-      const r = hero.getBoundingClientRect();
-      const run = r.height - innerHeight;
-      return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 1;
-    };
-
-    const update = () => {
-      const p = progress();
-      const f = Math.min(1, p / FILM_END);
-      want = Math.round(f * (FRAMES - 1));
-      for (const b of beats) b.el.classList.toggle('is-on', f >= b.range[0] && f < b.range[1]);
-      if (hint) hint.classList.toggle('is-off', p > 0.02);
-      schedule();
-    };
-
-    let lastSet = '';
-    const onResize = () => { size(); if (pickSet() !== lastSet) { lastSet = pickSet(); load(); } update(); };
-    addEventListener('resize', onResize, { passive: true });
-    addEventListener('scroll', update, { passive: true });
-    reduce.addEventListener('change', () => location.reload());
-    onResize();
+  /* split headings marked data-words into words that rise in one at a time */
+  if (!reduce.matches) {
+    $$('[data-words]').forEach(el => {
+      let i = 0;
+      const walk = node => {
+        [...node.childNodes].forEach(n => {
+          if (n.nodeType === 3) {
+            const frag = document.createDocumentFragment();
+            n.textContent.split(/(\s+)/).forEach(part => {
+              if (!part) return;
+              if (/^\s+$/.test(part)) { frag.append(part); return; }
+              const s = document.createElement('span'); s.className = 'w'; s.style.setProperty('--i', i++); s.textContent = part; frag.append(s);
+            });
+            n.replaceWith(frag);
+          } else if (n.nodeType === 1) walk(n);
+        });
+      };
+      walk(el);
+    });
+    $('.hero-copy')?.classList.add('anim');
   }
 
   addEventListener('scroll', setNav, { passive: true });
@@ -132,6 +84,96 @@
   $$('[data-package]').forEach(a => a.addEventListener('click', () => {
     if (pkgSelect) pkgSelect.value = a.dataset.package;
   }));
+
+
+  /* ---------- services: orbs fly in from the film's ring and grow as you scroll ---------- */
+  const zoom = $('[data-svc-zoom]');
+  if (zoom) {
+    const list = $('.orbs', zoom);
+    const orbs = $$('.orb', zoom);
+    const vids = $$('video', zoom);
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    let near = false, playing = false, ticking = false;
+
+    const place = () => {               // ring offsets, measured on resize only
+      const cx = list.clientWidth / 2, cy = list.clientHeight / 2;
+      const R = Math.min(list.clientWidth, list.clientHeight) * 0.24;
+      orbs.forEach((o, k) => {
+        const m = $('.orb-media', o);
+        const a = (-90 + k * 60) * Math.PI / 180;
+        o.style.setProperty('--sx', (cx + R * Math.cos(a) - (o.offsetLeft + o.offsetWidth / 2)).toFixed(1));
+        o.style.setProperty('--sy', (cy + R * Math.sin(a) - (o.offsetTop + m.offsetHeight / 2)).toFixed(1));
+      });
+    };
+    const setPlay = on => {
+      if (on === playing) return;
+      playing = on;
+      vids.forEach(v => on ? v.play().catch(() => {}) : v.pause());
+    };
+    const update = () => {
+      ticking = false;
+      const r = zoom.getBoundingClientRect();
+      const travel = Math.max(1, r.height - innerHeight);
+      const p = Math.min(1, Math.max(0, -r.top / (travel * 0.6)));
+      const e = ease(p);
+      zoom.style.setProperty('--e', e.toFixed(4));
+      setPlay(near && e > 0.45);
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+
+    if (reduce.matches) {
+      zoom.style.setProperty('--e', 1);
+    } else {
+      place();
+      addEventListener('resize', () => { place(); onScroll(); }, { passive: true });
+      addEventListener('scroll', onScroll, { passive: true });
+      update();
+    }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([en]) => {
+        near = en.isIntersecting;
+        if (near) vids.forEach(v => { if (v.preload === 'none') v.preload = 'auto'; });
+        if (reduce.matches) setPlay(false); else update();
+      }, { rootMargin: '50% 0px' }).observe(zoom);
+    }
+
+    /* detail dialog, deep-linked as ?service=slug */
+    const sd = $('[data-svc-dialog]');
+    const slot = $('[data-svc-slot]', sd);
+    let opener = null;
+    const setParam = slug => {
+      const u = new URL(location.href);
+      slug ? u.searchParams.set('service', slug) : u.searchParams.delete('service');
+      history.replaceState(null, '', u);
+    };
+    const openSvc = (slug, from) => {
+      const t = $('#svc-' + slug);
+      if (!t || !sd?.showModal) return;
+      opener = from || null;
+      slot.replaceChildren(t.content.cloneNode(true));
+      const v = $('video', slot);
+      if (reduce.matches) { v.removeAttribute('autoplay'); v.pause(); }
+      setPlay(false);
+      sd.showModal();
+      setParam(slug);
+    };
+    $$('[data-service]', zoom).forEach(b => b.addEventListener('click', () => openSvc(b.dataset.service, b)));
+    sd?.addEventListener('click', e => {
+      if (e.target === sd) { sd.close(); return; }
+      const c = e.target.closest('[data-close-svc]');
+      if (!c) return;
+      if (c.dataset.package) { if (pkgSelect) pkgSelect.value = c.dataset.package; opener = null; }
+      sd.close();
+    });
+    sd?.addEventListener('close', () => {
+      slot.replaceChildren();
+      setParam(null);
+      opener?.focus({ preventScroll: true });
+      if (!reduce.matches) update();
+    });
+    const want = new URLSearchParams(location.search).get('service');
+    if (want) openSvc(want);
+  }
 
   /* ---------- project form ---------- */
   if (form) {

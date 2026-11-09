@@ -22,8 +22,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="/assets/hero/169/f000.webp" media="(min-aspect-ratio: 1/1)" fetchpriority="high">
-<link rel="preload" as="image" href="/assets/hero/916/f000.webp" media="(max-aspect-ratio: 1/1)" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/hero/hero-first-169.jpg" media="(min-aspect-ratio: 1/1)" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/hero/hero-first-916.jpg" media="(max-aspect-ratio: 1/1)" fetchpriority="high">
 <link rel="stylesheet" href="/styles.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"Vantageous","legalName":"Ain Corp.","url":"https://vantageous.studio/","email":"hello@vantageous.studio","description":"Creative studio for startups and growing businesses: brand identity, websites, launch films, campaigns and paid social.","areaServed":["CA","US"],"address":{"@type":"PostalAddress","addressRegion":"ON","addressCountry":"CA"},"sameAs":["https://www.instagram.com/vantageous/"]}
@@ -54,37 +54,90 @@
 
 <main id="main">
 
-  <!-- Hero: the marble run plays as you scroll. Without JS or with reduced motion it is a still frame. -->
+  <!-- Hero: the marble run plays once on arrival behind the headline, then holds on the chart. Reduced motion: the still. -->
   <section class="hero" data-hero aria-labelledby="hero-title">
-    <div class="hero-stage">
-      <canvas class="hero-canvas" data-hero-canvas aria-hidden="true"></canvas>
+    <div class="hero-media" aria-hidden="true">
+      <video class="hero-video" data-hero-video muted playsinline preload="auto" disablepictureinpicture
+             poster="/assets/hero/hero-first-169.jpg">
+        <source src="/assets/hero/hero-run-916.mp4" type="video/mp4" media="(max-aspect-ratio: 1/1)">
+        <source src="/assets/hero/hero-run-169.mp4" type="video/mp4">
+      </video>
       <picture class="hero-still">
-        <source media="(max-aspect-ratio: 1/1)" srcset="/assets/hero/916/still.webp">
-        <img src="/assets/hero/169/still.webp" alt="" width="1600" height="900" fetchpriority="high">
+        <source media="(max-aspect-ratio: 1/1)" srcset="/assets/hero/hero-end-916.jpg">
+        <img src="/assets/hero/hero-end-169.jpg" alt="" width="1600" height="900">
       </picture>
-      <div class="hero-shade" aria-hidden="true"></div>
-      <div class="copy-shade" data-beat="0.76,1.01" aria-hidden="true"></div>
+    </div>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="copy-shade" aria-hidden="true"></div>
 
-      <div class="beats" aria-hidden="true">
-        <p class="beat" data-beat="0,0.33">Every brand is in motion.<br><span>But where is <em>yours</em> headed?</span></p>
-        <p class="beat" data-beat="0.37,0.53">Pick up <em>speed</em>.</p>
-        <p class="beat" data-beat="0.56,0.74">Break out of your <em>box</em>.</p>
+    <div class="hero-copy">
+      <p class="label">Creative studio for startups and growing businesses</p>
+      <h1 id="hero-title" class="display" data-words>Present your brand like a market <em>leader</em>, and let it flourish into one.</h1>
+      <p class="lead">We build your brand, your website, your launch and your growth, so you look like the leader in your market, then become it.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#start">Start your project</a>
+        <button class="btn btn-glass" type="button" data-open-film>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+          Watch the film
+        </button>
+        <button class="replay" type="button" data-replay hidden aria-label="Replay the animation">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>
+        </button>
       </div>
+    </div>
+  </section>
 
-      <div class="hero-copy" data-beat="0.78,1.01">
-        <p class="label">Creative studio for startups and growing businesses</p>
-        <h1 id="hero-title" class="display">Present your brand like a market <em>leader</em>, and let it flourish into one.</h1>
-        <p class="lead">We build your brand, your website, your launch and your growth, so you look like the leader in your market, then become it.</p>
-        <div class="actions">
-          <a class="btn btn-primary" href="#start">Start your project</a>
-          <button class="btn btn-glass" type="button" data-open-film>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
-            Watch the film
+  <section class="services-zoom" id="services" data-svc-zoom aria-labelledby="svc-head">
+    <div class="sz-stage">
+      <div class="container sz-head">
+        <p class="label">Services</p>
+        <h2 class="h1" id="svc-head">Six ways we make you look like the leader.</h2>
+        <p class="sz-hint">Pick one to see what's included.</p>
+      </div>
+      <ul class="orbs" role="list">
+        <li class="orb" style="--k:0">
+          <button type="button" class="orb-btn" data-service="brand-motion" aria-haspopup="dialog" aria-label="Brand Motion: learn more">
+            <span class="orb-media"><video muted loop playsinline preload="none" poster="/assets/services/brand-motion.jpg" disablepictureinpicture aria-hidden="true"><source src="/assets/services/brand-motion.mp4" type="video/mp4"></video></span>
+            <span class="orb-title" aria-hidden="true">Brand Motion</span>
+            <span class="orb-more" aria-hidden="true">Learn more</span>
           </button>
-        </div>
-      </div>
-
-      <p class="scroll-hint" data-scroll-hint aria-hidden="true">Scroll</p>
+        </li>
+        <li class="orb" style="--k:1">
+          <button type="button" class="orb-btn" data-service="brand-identity" aria-haspopup="dialog" aria-label="Brand Identity: learn more">
+            <span class="orb-media"><video muted loop playsinline preload="none" poster="/assets/services/brand-identity.jpg" disablepictureinpicture aria-hidden="true"><source src="/assets/services/brand-identity.mp4" type="video/mp4"></video></span>
+            <span class="orb-title" aria-hidden="true">Brand Identity</span>
+            <span class="orb-more" aria-hidden="true">Learn more</span>
+          </button>
+        </li>
+        <li class="orb" style="--k:2">
+          <button type="button" class="orb-btn" data-service="websites" aria-haspopup="dialog" aria-label="Websites: learn more">
+            <span class="orb-media"><video muted loop playsinline preload="none" poster="/assets/services/websites.jpg" disablepictureinpicture aria-hidden="true"><source src="/assets/services/websites.mp4" type="video/mp4"></video></span>
+            <span class="orb-title" aria-hidden="true">Websites</span>
+            <span class="orb-more" aria-hidden="true">Learn more</span>
+          </button>
+        </li>
+        <li class="orb" style="--k:3">
+          <button type="button" class="orb-btn" data-service="website-revamp" aria-haspopup="dialog" aria-label="Website Revamp: learn more">
+            <span class="orb-media"><video muted loop playsinline preload="none" poster="/assets/services/website-revamp.jpg" disablepictureinpicture aria-hidden="true"><source src="/assets/services/website-revamp.mp4" type="video/mp4"></video></span>
+            <span class="orb-title" aria-hidden="true">Website Revamp</span>
+            <span class="orb-more" aria-hidden="true">Learn more</span>
+          </button>
+        </li>
+        <li class="orb" style="--k:4">
+          <button type="button" class="orb-btn" data-service="growth" aria-haspopup="dialog" aria-label="Growth: learn more">
+            <span class="orb-media"><video muted loop playsinline preload="none" poster="/assets/services/growth.jpg" disablepictureinpicture aria-hidden="true"><source src="/assets/services/growth.mp4" type="video/mp4"></video></span>
+            <span class="orb-title" aria-hidden="true">Growth</span>
+            <span class="orb-more" aria-hidden="true">Learn more</span>
+          </button>
+        </li>
+        <li class="orb" style="--k:5">
+          <button type="button" class="orb-btn" data-service="launch-films" aria-haspopup="dialog" aria-label="Launch Films: learn more">
+            <span class="orb-media"><video muted loop playsinline preload="none" poster="/assets/services/launch-films.jpg" disablepictureinpicture aria-hidden="true"><source src="/assets/services/launch-films.mp4" type="video/mp4"></video></span>
+            <span class="orb-title" aria-hidden="true">Launch Films</span>
+            <span class="orb-more" aria-hidden="true">Learn more</span>
+          </button>
+        </li>
+      </ul>
     </div>
   </section>
 
@@ -138,43 +191,13 @@
           <li><span class="time">0:08</span><div><h3 class="h3">The split</h3><p>It hits our logo and peels onto an exponential path while the steady line carries on unlit.</p></div></li>
           <li><span class="time">0:12</span><div><h3 class="h3">The breakout</h3><p>The corner of the box cracks and shatters on the beat. The open box with the marble outside is our logo.</p></div></li>
           <li><span class="time">0:16</span><div><h3 class="h3">The trajectory</h3><p>The scene turns into a growth chart that draws itself on: steady line versus the exponential one.</p></div></li>
-          <li><span class="time">0:26</span><div><h3 class="h3">New markets</h3><p>Branches grow beyond the box into six animations, each taking centre stage, then fold back into the logo.</p></div></li>
+          <li><span class="time">0:26</span><div><h3 class="h3">What we do</h3><p>Six services take centre stage one by one, from brand motion to launch films, then fold back into the logo.</p></div></li>
         </ol>
       </div>
       <p class="note">3D scenes, type and music built in code; photoreal shots made with AI video. Original score, owned outright.</p>
     </div>
   </section>
 
-  <section class="section" id="services">
-    <div class="container">
-      <div class="section-head">
-        <p class="label">Services</p>
-        <h2 class="h1">The content you need to compete with the leaders in your market.</h2>
-      </div>
-      <div class="grid grid-4">
-        <article class="card">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4H8a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4v-4"/><circle cx="9.5" cy="14.5" r="1.5"/><circle cx="17.5" cy="6.5" r="2.5"/></svg>
-          <h3 class="h3">Brand</h3>
-          <p>Logo systems, brand guidelines, headers, banners and templates, plus an animated logo and sonic logo that make your brand feel alive.</p>
-        </article>
-        <article class="card">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg>
-          <h3 class="h3">Websites</h3>
-          <p>New sites, landing pages and revamps built from your brand: fast, made for phones, with motion that tells your story.</p>
-        </article>
-        <article class="card">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>
-          <h3 class="h3">Launch films and campaigns</h3>
-          <p>A hero film for your launch, raise or new feature, and a full set of reels, statics and ads around it.</p>
-        </article>
-        <article class="card">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>
-          <h3 class="h3">Growth</h3>
-          <p>Short-form content every month and paid social run in your own ad accounts on Meta, TikTok and LinkedIn, with plain-language reports.</p>
-        </article>
-      </div>
-    </div>
-  </section>
 
   <section class="section band" id="packages">
     <div class="container">
@@ -375,6 +398,83 @@
   </section>
 
 </main>
+
+<dialog class="svc-dialog" data-svc-dialog aria-labelledby="svc-title">
+  <button type="button" class="dialog-close" data-close-svc aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <div class="svc-dialog-inner" data-svc-slot></div>
+</dialog>
+  <template id="svc-brand-motion"><div class="svc-detail">
+    <video class="svc-video" muted loop playsinline autoplay poster="/assets/services/brand-motion.jpg" width="720" height="720" aria-hidden="true"><source src="/assets/services/brand-motion.mp4" type="video/mp4"></video>
+    <div class="svc-body">
+      <p class="label">Service 1 of 6</p>
+      <h2 class="h1" id="svc-title">Brand Motion</h2>
+      <p class="svc-tag">Your logo, brought to life.</p>
+      <p>An animated logo, a sonic logo and intro and outro stings, so every video, reel and pitch opens like it's from a brand that's already made it.</p>
+      <ul class="ticks"><li>Animated logo in every format you post</li><li>Sonic logo: a short sound mark, owned outright</li><li>Intro and outro stings for reels, ads and videos</li></ul>
+      <p class="svc-price">From $1,500</p>
+      <a class="btn btn-primary" href="#start" data-package="Brand" data-close-svc>Ask about Brand Motion</a>
+    </div>
+  </div></template>
+  <template id="svc-brand-identity"><div class="svc-detail">
+    <video class="svc-video" muted loop playsinline autoplay poster="/assets/services/brand-identity.jpg" width="720" height="720" aria-hidden="true"><source src="/assets/services/brand-identity.mp4" type="video/mp4"></video>
+    <div class="svc-body">
+      <p class="label">Service 2 of 6</p>
+      <h2 class="h1" id="svc-title">Brand Identity</h2>
+      <p class="svc-tag">A brand that looks like the leader.</p>
+      <p>We turn a logo you've outgrown into a full identity: the mark in every direction and size, colours, type, and the headers, banners and templates you'll use every day.</p>
+      <ul class="ticks"><li>Brand Starter: logo system, colours, fonts and social headers, from $1,800</li><li>Brand Identity: the full system with guidelines, templates and an animated logo, from $4,500</li><li>Every file in every format, handed over with the rights</li></ul>
+      <p class="svc-price">From $1,800</p>
+      <a class="btn btn-primary" href="#start" data-package="Brand" data-close-svc>Ask about Brand Identity</a>
+    </div>
+  </div></template>
+  <template id="svc-websites"><div class="svc-detail">
+    <video class="svc-video" muted loop playsinline autoplay poster="/assets/services/websites.jpg" width="720" height="720" aria-hidden="true"><source src="/assets/services/websites.mp4" type="video/mp4"></video>
+    <div class="svc-body">
+      <p class="label">Service 3 of 6</p>
+      <h2 class="h1" id="svc-title">Websites</h2>
+      <p class="svc-tag">A site built from your brand.</p>
+      <p>Landing pages and full sites designed around your brand, fast on phones, with motion that tells your story. Bring your brand and we move faster, and you pay less.</p>
+      <ul class="ticks"><li>Landing Page: one high-converting page, from $2,500</li><li>Website: up to 6 custom pages, from $4,500</li><li>Website Care: updates and edits, $250/month</li></ul>
+      <p class="svc-price">From $2,500</p>
+      <a class="btn btn-primary" href="#start" data-package="Website" data-close-svc>Ask about a website</a>
+    </div>
+  </div></template>
+  <template id="svc-website-revamp"><div class="svc-detail">
+    <video class="svc-video" muted loop playsinline autoplay poster="/assets/services/website-revamp.jpg" width="720" height="720" aria-hidden="true"><source src="/assets/services/website-revamp.mp4" type="video/mp4"></video>
+    <div class="svc-body">
+      <p class="label">Service 4 of 6</p>
+      <h2 class="h1" id="svc-title">Website Revamp</h2>
+      <p class="svc-tag">Your site, rebuilt to compete.</p>
+      <p>We redesign and rebuild the site you have so it looks current, loads fast and turns visitors into calls, keeping the content and search ranking that already work.</p>
+      <ul class="ticks"><li>Redesign and rebuild of your existing site</li><li>Your content carried over and tightened</li><li>Speed, mobile and search basics fixed on the way</li></ul>
+      <p class="svc-price">From $3,500</p>
+      <a class="btn btn-primary" href="#start" data-package="Website" data-close-svc>Ask about a revamp</a>
+    </div>
+  </div></template>
+  <template id="svc-growth"><div class="svc-detail">
+    <video class="svc-video" muted loop playsinline autoplay poster="/assets/services/growth.jpg" width="720" height="720" aria-hidden="true"><source src="/assets/services/growth.mp4" type="video/mp4"></video>
+    <div class="svc-body">
+      <p class="label">Service 5 of 6</p>
+      <h2 class="h1" id="svc-title">Growth</h2>
+      <p class="svc-tag">Content every month, ads that learn.</p>
+      <p>Short-form content every month and paid social in your own ad accounts on Meta, TikTok and LinkedIn, tested every week and reported in plain language.</p>
+      <ul class="ticks"><li>8 short videos and 8 statics a month</li><li>Paid social run in your own ad accounts</li><li>Weekly creative testing and a monthly report</li><li>3-month minimum</li></ul>
+      <p class="svc-price">From $3,500/month</p>
+      <a class="btn btn-primary" href="#start" data-package="Growth Retainer" data-close-svc>Ask about growth</a>
+    </div>
+  </div></template>
+  <template id="svc-launch-films"><div class="svc-detail">
+    <video class="svc-video" muted loop playsinline autoplay poster="/assets/services/launch-films.jpg" width="720" height="720" aria-hidden="true"><source src="/assets/services/launch-films.mp4" type="video/mp4"></video>
+    <div class="svc-body">
+      <p class="label">Service 6 of 6</p>
+      <h2 class="h1" id="svc-title">Launch Films</h2>
+      <p class="svc-tag">A launch that looks like the leader's.</p>
+      <p>A hero film for your launch, raise or new feature, with an original score and every cut and format, plus a full campaign of reels, statics and ads around it.</p>
+      <ul class="ticks"><li>Launch Reel: a 30–45s hero film with an original score, from $4,500</li><li>Launch Campaign: the film plus reels, statics and an ad set for launch week, from $9,500</li><li>Every cut: 15s, 30s and full, in 9:16, 4:5 and 16:9</li></ul>
+      <p class="svc-price">From $4,500</p>
+      <a class="btn btn-primary" href="#start" data-package="Launch" data-close-svc>Plan your launch</a>
+    </div>
+  </div></template>
 
 <footer class="footer">
   <div class="container footer-inner">
